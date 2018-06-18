@@ -23,7 +23,7 @@ beforeEach( async () => {
     .deploy({ data: "0x" + contracts[':DeclaratieFactory'].bytecode })
     .send({ from: accounts[0], gas: '5000000'});
 
-  await factory.methods.createDeclaratie(accounts[4], accounts[5], [ 1, 2, 3], "16-06-2018").send({
+  await factory.methods.createDeclaratie(accounts[4], accounts[5], ["test1", "test2", "test3"],[ 1, 2, 3], "16-06-2018").send({
       from: accounts[0],
       gas: '5000000'
     });
@@ -38,7 +38,7 @@ beforeEach( async () => {
 });
 
 describe('Declaratie Contract', () => {
-  it('Een factory contract en een declaratie contract worden gedeploted', () => {
+  it('Een factory contract en een declaratie contract worden gedeployed', () => {
     assert.ok(factory.options.address);
     assert.ok(declaratie.options.address);
   });
