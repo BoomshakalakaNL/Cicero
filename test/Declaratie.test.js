@@ -56,11 +56,18 @@ describe('Declaratie Contract', () => {
   });
 
   it('Kan prijzen ophalen', async () => {
-    const pijzen = await declaratie.methods.getPrijzen().call();
-    assert.equal(prijzen, [ 1, 2 , 3]);
+    const prijzen = await declaratie.methods.getPrijzen().call();
+    assert.equal(prijzen, [ '1', '2' , '3']);
   });
 
-  //it('Kan lezer toevoegen', async () => {});
+  it('Client kan lezer toevoegen', async () => {
+    await declaratie.methods.addReader(accounts[2]).send({
+      from: accounts[4],
+      gas: '5000000'
+    });
+    const boolLezer = await declaratie.methods.magLezen(accounts[2]);
+    assert(boolLezer);
+  });
 
   //it('Client kan accodeerder toevoegen', async () => {});
 

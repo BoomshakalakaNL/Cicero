@@ -56,8 +56,8 @@ contract Declaratie{
 
     function addValidator(address validator) public {
       require(msg.sender == stakeholders.client);
-      magLezen[reader] = true;
-      magAccorderen[reader] = true;
+      magLezen[validator] = true;
+      magAccorderen[validator] = true;
     }
 
     modifier readRestriction() {
