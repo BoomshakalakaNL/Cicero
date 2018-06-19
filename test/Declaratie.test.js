@@ -6,74 +6,89 @@ const Web3 = require('web3');
 const provider = ganache.provider();
 const web3 = new Web3(provider);
 
-const compiledFactory = require('../ethereum/build/DeclaratieFactory.json');
-const compiledDeclaratie = require('../ethereum/build/Declaratie.json');
+const compiledFactory = require('../ethereum/build/DeclarationFactory.json');
+const compiledDeclaration = require('../ethereum/build/Declaration.json');
 
-
-let accounts; // accounts[0] = zorgkantoor, accounts[4] = client, accounts[5] = verzekeraar
+//accounts[0] = Care Administration Office address
+//accounts[2] = Insurance address
+//accounts[4] = Client address
+let accounts;
 let factory;
-let declaratieAddress;
-let declaratie;
+let declarationAddress;
+let declaration;
 
 beforeEach( async () => {
   accounts = await web3.eth.getAccounts();
 
   factory = await new web3.eth.Contract(JSON.parse(compiledFactory.interface))
     .deploy({ data: "0x" + compiledFactory.bytecode })
-    .send({ from: accounts[0], gas: '5000000'});
+    .send({ from: accounts[0], gas: '3000000'});
 
-  await factory.methods.createDeclaratie(accounts[4], accounts[5], "AC130;BF400;AF900", [ 1, 2, 3], "16-06-2018").send({
+  await factory.methods.createDeclaration(accounts[4], accounts[2], "D3002;BB025;A3002", "1680;1500;0100", "16-06-2018").send({
       from: accounts[0],
-      gas: '5000000'
+      gas: '3000000'
     });
 
-  const address = await factory.methods.getDeployedDeclaraties().call();
-  declaratieAddress = address[0];
+  const address = await factory.methods.getDeclarations().call();
+  declarationAddress = address[0];
 
-  declaratie = new web3.eth.Contract(
-    JSON.parse(compiledDeclaratie.interface),
-    declaratieAddress
+  declaration = new web3.eth.Contract(
+    JSON.parse(compiledDeclaration.interface),
+    declarationAddress
   );
 });
 
-describe('Declaratie Contract', () => {
-  it('Een factory contract en een declaratie contract worden gedeployed', () => {
+describe('Declaration Contract', () => {
+  it('A factory- and declaration contract have succesfully been deployed', () => {
     assert.ok(factory.options.address);
-    assert.ok(declaratie.options.address);
+    assert.ok(declaration.options.address);
   });
 
-  it('De ingevoerde addressen zijn stakeholders', async () => {
-    const stakeholders = await declaratie.methods.stakeholders().call();
-    assert.equal(accounts[0], stakeholders.zorgkantoor);
-    assert.equal(accounts[4], stakeholders.client);
-    assert.equal(accounts[5], stakeholders.verzekeraar);
+  it('The Care Administration Office can read the declaration', async () => {
+    const summary = await declaration.methods.getDeclaration().call();
+    assert.equal(accounts[2], summary[1]);
   });
 
-  it('Client kan lezer toevoegen', async () => {
-    await declaratie.methods.addReader(accounts[2]).send({
-      from: accounts[4],
-      gas: '5000000'
+  it('The Care Administration Office can edit the declaration', async () => {
+    await declaration.methods.editDeclaration(accounts[4], accounts[2], "TEST1;TEST2;TEST3", "1234;5678;9012", "01-01-2000").send({
+      from: accounts[0],
+      gas: '3000000'
     });
-    const boolLezer = await declaratie.methods.magLezen(accounts[2]);
-    assert(boolLezer);
+    const summary = await declaration.methods.getDeclaration().call();
+    assert.equal("TEST1;TEST2;TEST3", summary[3]);
   });
 
-  it('Client kan een accordeerder toevoegen', async () => {
-    await declaratie.methods.addValidator(accounts[2]).send({
-      from: accounts[4],
-      gas: '5000000'
-    });
-    const boolLezer = await declaratie.methods.magAccorderen(accounts[2]);
-    const boolAccordeerder = await declaratie.methods.magAccorderen(accounts[2]);
-    assert(boolLezer);
-    assert(boolAccordeerder);
-  });
-
-  it('Alleen een client mag lezer toevoegen', async () => {
+  it('Only the Care Administration Office can edit the declaration, and nobody else', async () => {
     try {
-      await declaratie.methods.addValidator(accounts[1]).send({
+      await declaration.methods.editDeclaration(accounts[4], accounts[2], "TEST1;TEST2;TEST3", "1234;5678;9012", "01-01-2000").send({
+        from: accounts[2],
+        gas: '3000000'
+      });
+      assert(false);
+    }
+    catch (err) {
+      assert(err);
+    }
+  });
+
+  it('The Care Administration Office can validate the declaration', async () => {
+    await declaration.methods.validate().send({
+      from: accounts[0],
+      gas: '3000000'
+    });
+    const validated = await declaration.methods.isValidated().call();
+    assert.equal(true, validated);
+  });
+
+  it('The Care Administration Office can no longer edit the declaration after it has been validated', async () => {
+    await declaration.methods.validate().send({
+      from: accounts[0],
+      gas: '3000000'
+    });
+    try{
+      await declaration.methods.editDeclaration(accounts[4], accounts[2], "TEST1;TEST2;TEST3", "1234;5678;9012", "01-01-2000").send({
         from: accounts[0],
-        gas: '5000000'
+        gas: '3000000'
       });
       assert(false);
     }
@@ -82,20 +97,60 @@ describe('Declaratie Contract', () => {
     }
   });
 
-  it('Het zorgkantoor kan intern valideren', async () => {
-    await declaratie.methods.validate().send({
+  it('The Client can read the declaration, if the declaration is validated', async () => {
+    await declaration.methods.validate().send({
       from: accounts[0],
-      gas: '5000000'
+      gas: '3000000'
     });
-    const validated = await declaratie.methods.getIsInternGevalideerd().call();
-    assert.ok(validated);
+    const summary = await declaration.methods.getDeclaration().call({from:accounts[2]});
+    assert.equal(accounts[2], summary[1]);
   });
 
-  it('Niemand anders dan het zorgkantoor kan intern valideren', async () => {
+  it('The Client can\'t read the declaration, if the declaration isn\'t validated', async () => {
     try {
-      await declaratie.methods.validate().send({
-        from: accounts[1],
-        gas: '5000000'
+      const summary = await declaration.methods.getDeclaration().call({from:accounts[2]});
+      assert(false);
+    }
+    catch (err) {
+      assert(err);
+    }
+  });
+
+  it('The Client can accept the declaration, if the declaration is validated', async () => {
+    await declaration.methods.validate().send({
+      from: accounts[0],
+      gas: '3000000'
+    });
+    await declaration.methods.accept().send({
+      from: accounts[2],
+      gas: '3000000'
+    });
+    const approved = await declaration.methods.isAccepted().call();
+    assert.equal(true, approved);
+  });
+
+  it('The Client can\'t accept the declaration, if the declaration isn\'t validated', async () => {
+    try {
+      await declaration.methods.accept().send({
+        from: accounts[2],
+        gas: '3000000'
+      });
+      assert(false);
+    }
+    catch (err){
+      assert(err);
+    }
+  });
+
+  it('Only the Client can accept the declaration, and nobody else', async () => {
+    await declaration.methods.validate().send({
+      from: accounts[0],
+      gas: '3000000'
+    });
+    try {
+      await declaration.methods.accept.send({
+        from: accounts[0],
+        gas: '3000000'
       });
       assert(false);
     }
@@ -104,49 +159,23 @@ describe('Declaratie Contract', () => {
     }
   });
 
-  it('De client kan een declaratie accorderen', async () => {
-    await declaratie.methods.validate().send({
+  it('The Insurance can read the declaration, if the declaration is validated', async () => {
+    await declaration.methods.validate().send({
       from: accounts[0],
-      gas: '5000000'
+      gas: '3000000'
     });
-    await declaratie.methods.accorderen().send({
-      from: accounts[4],
-      gas: '5000000'
-    });
-    const akkoord = await declaratie.methods.getIsAkkoord().call();
-    assert.ok(akkoord);
+    const summary = await declaration.methods.getDeclaration().call({from:accounts[4]});
+    assert.equal(accounts[2], summary[1]);
   });
 
-  it('Een mantelzorger die door de client is toegevoegd, kan accorderen', async () => {
-    await declaratie.methods.validate().send({
-      from: accounts[0],
-      gas: '5000000'
-    });
-    await declaratie.methods.addValidator(accounts[2]).send({
-      from: accounts[4],
-      gas: '5000000'
-    });
-    await declaratie.methods.accorderen().send({
-      from: accounts[2],
-      gas: '5000000'
-    });
-    const akkoord = await declaratie.methods.getIsAkkoord().call();
-    assert.ok(akkoord);
+  it('The Insurance can\'t read the declaration, if the declaration isn\'t validated', async () => {
+    try {
+      const summary = await declaration.methods.getDeclaration().call({from:accounts[4]});
+      assert(false);
+    }
+    catch (err) {
+      assert(err);
+    }
   });
-
-  it('Het zorgkantoor kan de declaratie aanpassen zolang deze niet intern is gevalideerd', async () => {
-    await declaratie.methods.editDeclaratie(accounts[2], accounts[5], "AC130;BF400;AF900", [ 1, 2, 3], "16-06-2018").send({
-      from: accounts[0],
-      gas: '5000000'
-    });
-    const stakeholders = await declaratie.methods.stakeholders().call();
-    assert.equal(accounts[2], stakeholders.client);
-  });
-
-  it('Kan alle gegevens ophalen', async () => {
-    const summary = await declaratie.methods.getSummary().call();
-    assert(summary);
-  });
-
 
 });
