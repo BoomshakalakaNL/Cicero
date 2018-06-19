@@ -1,4 +1,4 @@
-pragma experimental ABIEncoderV2;
+pragma solidity ^0.4.24;
 
 contract DeclaratieFactory{
     address[] public deployedDeclaraties;
