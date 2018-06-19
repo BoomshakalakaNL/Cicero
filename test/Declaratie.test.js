@@ -45,19 +45,9 @@ describe('Declaratie Contract', () => {
 
   it('De ingevoerde addressen zijn stakeholders', async () => {
     const stakeholders = await declaratie.methods.stakeholders().call();
-    assert.equal(accounts[0], stakeholders.zorgverlener);
+    assert.equal(accounts[0], stakeholders.zorgkantoor);
     assert.equal(accounts[4], stakeholders.client);
     assert.equal(accounts[5], stakeholders.verzekeraar);
-  });
-
-  it('Kan codes ophalen', async () => {
-    const codes = await declaratie.methods.getCodes().call();
-    assert.equal(codes, "AC130;BF400;AF900");
-  });
-
-  it('Kan prijzen ophalen', async () => {
-    const prijzen = await declaratie.methods.getPrijzen().call();
-    assert.equal(prijzen, [ '1', '2' , '3']);
   });
 
   it('Client kan lezer toevoegen', async () => {
@@ -69,6 +59,95 @@ describe('Declaratie Contract', () => {
     assert(boolLezer);
   });
 
-  //it('Client kan accodeerder toevoegen', async () => {});
+  it('Client kan een accordeerder toevoegen', async () => {
+    await declaratie.methods.addValidator(accounts[2]).send({
+      from: accounts[4],
+      gas: '5000000'
+    });
+    const boolLezer = await declaratie.methods.magAccorderen(accounts[2]);
+    const boolAccordeerder = await declaratie.methods.magAccorderen(accounts[2]);
+    assert(boolLezer);
+    assert(boolAccordeerder);
+  });
+
+  it('Alleen een client mag lezer toevoegen', async () => {
+    try {
+      await declaratie.methods.addValidator(accounts[1]).send({
+        from: accounts[0],
+        gas: '5000000'
+      });
+      assert(false);
+    }
+    catch (err) {
+      assert(err);
+    }
+  });
+
+  it('Het zorgkantoor kan intern valideren', async () => {
+    await declaratie.methods.validate().send({
+      from: accounts[0],
+      gas: '5000000'
+    });
+    const validated = await declaratie.methods.getIsInternGevalideerd().call();
+    assert.ok(validated);
+  });
+
+  it('Niemand anders dan het zorgkantoor kan intern valideren', async () => {
+    try {
+      await declaratie.methods.validate().send({
+        from: accounts[1],
+        gas: '5000000'
+      });
+      assert(false);
+    }
+    catch (err) {
+      assert(err);
+    }
+  });
+
+  it('De client kan een declaratie accorderen', async () => {
+    await declaratie.methods.validate().send({
+      from: accounts[0],
+      gas: '5000000'
+    });
+    await declaratie.methods.accorderen().send({
+      from: accounts[4],
+      gas: '5000000'
+    });
+    const akkoord = await declaratie.methods.getIsAkkoord().call();
+    assert.ok(akkoord);
+  });
+
+  it('Een mantelzorger die door de client is toegevoegd, kan accorderen', async () => {
+    await declaratie.methods.validate().send({
+      from: accounts[0],
+      gas: '5000000'
+    });
+    await declaratie.methods.addValidator(accounts[2]).send({
+      from: accounts[4],
+      gas: '5000000'
+    });
+    await declaratie.methods.accorderen().send({
+      from: accounts[2],
+      gas: '5000000'
+    });
+    const akkoord = await declaratie.methods.getIsAkkoord().call();
+    assert.ok(akkoord);
+  });
+
+  it('Het zorgkantoor kan de declaratie aanpassen zolang deze niet intern is gevalideerd', async () => {
+    await declaratie.methods.editDeclaratie(accounts[2], accounts[5], "AC130;BF400;AF900", [ 1, 2, 3], "16-06-2018").send({
+      from: accounts[0],
+      gas: '5000000'
+    });
+    const stakeholders = await declaratie.methods.stakeholders().call();
+    assert.equal(accounts[2], stakeholders.client);
+  });
+
+  it('Kan alle gegevens ophalen', async () => {
+    const summary = await declaratie.methods.getSummary().call();
+    assert(summary);
+  });
+
 
 });
