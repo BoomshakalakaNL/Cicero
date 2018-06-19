@@ -1,4 +1,5 @@
 import factory from '../ethereum/factory';
+import React, { Component } from 'react';
 import { Card, Button } from 'semantic-ui-react';
 import Layout from '../components/Layout.js';
 import { Link } from '../routes.js';
@@ -17,7 +18,7 @@ class DeclaratieIndex extends Component{
         header: address,
         description: (
           <Link route={`/declaraties/${address}`}>
-            <a>View Declaraties</a>
+            <a>Bekijk details</a>
           </Link>
           ),
         fluid: true,
@@ -32,7 +33,7 @@ class DeclaratieIndex extends Component{
     return (
       <Layout>
         <h1>Hello World</h1>
-        {this.renderCampaigns()}
+        {this.renderDeclaraties()}
       </Layout>
     );
   }
