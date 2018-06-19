@@ -8,7 +8,7 @@ const web3 = new Web3(provider);
 
 
 
-const contracts = require ('../compile');
+const contracts = require ('../ethereum/compile');
 
 
 let accounts; // accounts[0] = zorgkantoor, accounts[4] = client, accounts[5] = verzekeraar
