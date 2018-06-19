@@ -6,14 +6,14 @@ export default () => {
   return (
     <Menu style={{marginTop: '10px'}}>
       <Link route='/'>
-        <a className='item'>CrowdCoin</a>
+        <a className='item'>Cicero Declaraties</a>
       </Link>
 
       <Menu.Menu position="right">
         <Link route='/'>
-          <a className='item'>Campaigns</a>
+          <a className='item'>Declaraties</a>
         </Link>
-        <Link route='/campaigns/new'>
+        <Link route='/declaraties/new'>
           <a className='item'><Icon name="add square"/></a>
         </Link>
       </Menu.Menu>

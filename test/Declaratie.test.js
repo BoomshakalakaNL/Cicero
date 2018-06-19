@@ -6,9 +6,8 @@ const Web3 = require('web3');
 const provider = ganache.provider();
 const web3 = new Web3(provider);
 
-
-
-const contracts = require ('../ethereum/compile');
+const compiledFactory = require('../ethereum/build/DeclaratieFactory.json');
+const compiledDeclaratie = require('../ethereum/build/Declaratie.json');
 
 
 let accounts; // accounts[0] = zorgkantoor, accounts[4] = client, accounts[5] = verzekeraar
@@ -19,8 +18,8 @@ let declaratie;
 beforeEach( async () => {
   accounts = await web3.eth.getAccounts();
 
-  factory = await new web3.eth.Contract(JSON.parse(contracts[':DeclaratieFactory'].interface))
-    .deploy({ data: "0x" + contracts[':DeclaratieFactory'].bytecode })
+  factory = await new web3.eth.Contract(JSON.parse(compiledFactory.interface))
+    .deploy({ data: "0x" + compiledFactory.bytecode })
     .send({ from: accounts[0], gas: '5000000'});
 
   await factory.methods.createDeclaratie(accounts[4], accounts[5], "AC130;BF400;AF900", [ 1, 2, 3], "16-06-2018").send({
@@ -32,7 +31,7 @@ beforeEach( async () => {
   declaratieAddress = address[0];
 
   declaratie = new web3.eth.Contract(
-    JSON.parse(contracts[':Declaratie'].interface),
+    JSON.parse(compiledDeclaratie.interface),
     declaratieAddress
   );
 });
