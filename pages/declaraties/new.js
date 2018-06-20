@@ -101,11 +101,16 @@ import { Router } from '../../routes';
 export default NewDeclaration;
 */
 
-class IncorporationForm extends Component {
+class NewDeclaration extends Component {
   constructor() {
     super();
     this.state = {
-      name: '',
+      insurance : '',
+      client: '',
+      dateDeclaration: '',
+      dateEndDeclaration: '',
+      errorMessage: '',
+      loading: false,
       declarations: [{
         code: '',
         amount: '',
@@ -118,7 +123,7 @@ class IncorporationForm extends Component {
     this.setState({ code: evt.target.value });
   }
 
-  handleDeclarationNameChange = (idx) => (evt) => {
+  handleDeclrationCodeChange = (idx) => (evt) => {
     const newDeclarations = this.state.declarations.map((declaration, sidx) => {
       if (idx !== sidx) return declaration;
       return { ...declaration, code: evt.target.value };
@@ -147,8 +152,17 @@ class IncorporationForm extends Component {
 
   handleSubmit = (evt) => {
     const { name, declarations } = this.state;
-    alert(`Incorporated: ${name} with ${declarations.length} declarations`);
-    console.log(this.state.declarations);
+    var codes = [];
+    var amounts = [];
+    var prices = [];
+    declarations.forEach( function(element) {
+      codes.push(element.code);
+      amounts.push(element.amount);
+      prices.push(element.price);
+    });
+    console.log(codes.join(";"));
+    console.log(amounts.join(";"));
+    console.log(prices.join(";"));
   }
 
   handleAddDeclaration = () => {
@@ -177,7 +191,7 @@ class IncorporationForm extends Component {
           <Form.Group widths='equal'>
             <Form.Field>
               <label>Code</label>
-              <Input fluid placeholder='A5' value={declaration.code} onChange={this.handleDeclarationNameChange(idx)}/>
+              <Input fluid placeholder='A5' value={declaration.code} onChange={this.handleDeclrationCodeChange(idx)}/>
             </Form.Field>
             <Form.Field>
               <label>Aantal</label>
@@ -187,15 +201,15 @@ class IncorporationForm extends Component {
               <label>Prijs</label>
               <Input fluid type='number' placeholder='1800' value={declaration.price} onChange={this.handleDeclarationPriceChange(idx)}/>
             </Form.Field>
-            <Button onClick={this.handleRemoveDeclaration(idx)}>Remove</Button>
+            <Button type="button" onClick={this.handleRemoveDeclaration(idx)}>Remove</Button>
           </Form.Group>
         ))}
-        <button type="button" onClick={this.handleAddDeclaration} className="small">Add Declaration</button>
-        <button>Incorporate</button>
+        <Button type="button" onClick={this.handleAddDeclaration} className="small">Add Declaration</Button>
+        <Button type="submit">Incorporate</Button>
       </Form>
       </Layout>
     )
   }
 }
 
-export default IncorporationForm;
+export default NewDeclaration;
