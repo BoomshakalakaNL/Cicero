@@ -5,15 +5,15 @@ import Layout from '../components/Layout.js';
 import { Link } from '../routes.js';
 
 
-class DeclaratieIndex extends Component{
+class DeclarationIndex extends Component{
   static async getInitialProps(){
-    const declaraties = await factory.methods.getDeployedDeclaraties().call();
+    const declarations = await factory.methods.getDeclarations().call();
 
-    return { declaraties };
+    return { declarations };
   }
 
-  renderDeclaraties() {
-    const items = this.props.declaraties.map(address => {
+  renderDeclarations() {
+    const items = this.props.declarations.map(address => {
       return {
         header: address,
         description: (
@@ -32,11 +32,11 @@ class DeclaratieIndex extends Component{
   render() {
     return (
       <Layout>
-        <h1>Hello World</h1>
-        {this.renderDeclaraties()}
+        <h3>Declaraties</h3>
+        {this.renderDeclarations()}
       </Layout>
     );
   }
 }
 
-export default DeclaratieIndex;
+export default DeclarationIndex;

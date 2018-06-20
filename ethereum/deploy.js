@@ -1,6 +1,6 @@
 const HDWalletProvider = require('truffle-hdwallet-provider');
 const Web3 = require ('web3');
-const compiledFactory = require('./build/DeclaratieFactory.json');
+const compiledFactory = require('./build/DeclarationFactory.json');
 
 const provider = new HDWalletProvider(
     'bone push blush film matter retreat divert night cargo sample family muffin',

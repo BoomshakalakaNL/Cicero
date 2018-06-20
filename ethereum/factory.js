@@ -1,10 +1,10 @@
 import web3 from './web3';
-import DeclaratieFactory from './build/DeclaratieFactory.json';
+import DeclarationFactory from './build/DeclarationFactory.json';
 
 
 const instance = new web3.eth.Contract(
-  JSON.parse(DeclaratieFactory.interface),
-  '0x12aEdE551aecAf12D418481684B92A708435F6C0'
+  JSON.parse(DeclarationFactory.interface),
+  '0xBDCB9aD2B691e32719F314a460B84bD2240ad8E2'
 );
 
 export default instance;
