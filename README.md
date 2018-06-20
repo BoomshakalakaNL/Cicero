@@ -1,18 +1,35 @@
-# Cicero
-Test
+Gegevens voor grafische vormgeving applicatie:
 
-  Declaratie Contract
-    √ Een factory contract en een declaratie contract worden gedeployed
-    √ De ingevoerde addressen zijn stakeholders (46ms)
-    √ Client kan lezer toevoegen (156ms)
-    √ Client kan een accordeerder toevoegen (110ms)
-    √ Alleen een client mag lezer toevoegen (63ms)
-    √ Het zorgkantoor kan intern valideren (125ms)
-    √ Niemand anders dan het zorgkantoor kan intern valideren (94ms)
-    √ De client kan een declaratie accorderen (219ms)
-    √ Een mantelzorger die door de client is toegevoegd, kan accorderen (328ms)
-    √ Het zorgkantoor kan de declaratie aanpassen zolang deze niet intern is gevalideerd (172ms)
-    √ Kan alle gegevens ophalen (94ms)
+h1.secondary, h2.secondary {
+    font-weight: 700;
+    color: #65b32e;
+}
 
+h1, h2 {
+    margin-bottom: 1.25rem;
+    font-family: NotoSans,Helvetica,Roboto,Arial,sans-serif;
+    font-weight: 400;
+    font-size: 2.125rem;
+    color: #831b78;
+}
 
-  11 passing (6s)
+a {
+    line-height: inherit;
+    color: #831b78;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.search .searchfield {
+    padding: 0 1.5625rem;
+    margin: 0;
+    background: #bb8fba;
+    float: left;
+    width: 21.875rem;
+    height: 3.8125rem;
+    border: none;
+    color: #fff;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
