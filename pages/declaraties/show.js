@@ -72,6 +72,9 @@ class DeclarationShow extends Component {
         <h3>Declaratie details van adres: {this.props.address}</h3>
         {/* <p>Declaratie address: </p> */}
         <h4>Overzicht geleverde zorg</h4>
+        <Link route={`/declaraties/${this.props.address}/edit`}>
+          <a>Bewerk details</a>
+        </Link>
         <br />
         <Card.Group itemsPerRow={6} centered>
           {this.renderCards()}
@@ -89,7 +92,7 @@ class DeclarationShow extends Component {
             <Grid.Column width={4}>
               <h3>Totaalprijs Declaratie</h3>
               <h4>€{this.state.grandTotal}</h4>
-              
+
               {/* <Image src="/assets/images/wireframe/paragraph.png" /> */}
             </Grid.Column>
           </Grid.Row>
