@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Layout from "../../components/Layout";
-import { Button, Card } from "semantic-ui-react";
+import { Button, Card, Grid, Image } from "semantic-ui-react";
 import Declaration from "../../ethereum/declaration";
 import web3 from "../../ethereum/web3";
 import { Link } from "../../routes";
@@ -29,61 +29,117 @@ class DeclarationShow extends Component {
     dateEndDeclaration: this.props.summary[7],
     isValidated: this.props.summary[8],
     isAccepted: this.props.summary[9],
-    loading: false
+    loading: false,
+    grandTotal: 0
   };
 
-  load = async event => {
-    const accounts = await web3.eth.getAccounts();
-    this.setState({ loading: true, errorMessage: "" });
-    try {
-      const declaration = Declaration(this.props.address);
-      const summary = await declaration.methods
-        .getDeclaration()
-        .call({ from: accounts[0] });
-      this.setState({
-        insurance: summary[0],
-        client: summary[1],
-        careAdminOff: summary[2],
-        careCodes: summary[3].split(";"), // .join(";")
-        careAmounts: summary[4].split(";"),
-        carePrices: summary[5].split(";"), // .join(";")
-        dateDeclaration: summary[6],
-        dateEndDeclaration: summary[7],
-        isValidated: summary[8],
-        isAccepted: summary[9]
-      });
-    } catch (err) {
-      console.log(err.message);
-      this.setState({ errorMessage: err.message });
+  renderCards() {
+    var Cards = [];
+
+    for (var i = 0; i < this.state.careCodes.length; i++) {
+      var a = this.state.carePrices[i];
+      a = parseInt(
+        this.state.carePrices[i].slice(0, this.state.carePrices[i].length - 2)
+      );
+      this.state.carePrices[i] = [
+        this.state.carePrices[i].slice(0, this.state.carePrices[i].length - 2),
+        ",",
+        this.state.carePrices[i].slice(this.state.carePrices[i].length - 2)
+      ].join("");
+      var totalPrice = parseFloat(this.state.careAmounts[i] * a).toFixed(2);
+      this.state.grandTotal += parseInt(totalPrice);
+      Cards.push(
+        <Card>
+          <Card.Content>
+            <Card.Header>{this.state.careCodes[i]}</Card.Header>
+            <Card.Meta>
+              {this.state.careAmounts[i]} x €{this.state.carePrices[i]}
+            </Card.Meta>
+            <Card.Description>
+              <h3>Totaal: €{totalPrice}</h3>
+            </Card.Description>
+          </Card.Content>
+        </Card>
+      );
     }
-    this.setState({ loading: false });
-    console.log(this.state);
-  };
-
+    return Cards;
+  }
   render() {
+    console.log(this.state.careCodes);
+    console.log(this.state.carePrices);
     return (
       <Layout>
-        <h3>Declaratie details</h3>
-        <p>Declaratie address: {this.props.address}</p>
+        <h3>Declaratie details van adres: {this.props.address}</h3>
+        {/* <p>Declaratie address: </p> */}
+        <h4>Overzicht geleverde zorg</h4>
         <br />
-        <Card.Group itemsPerRow={6}>
-          <Card>
-            <Card.Content>
-              <Card.Header>{this.state.careCodes[0]}</Card.Header>
-              <Card.Meta>Co-Worker</Card.Meta>
-              <Card.Description>
-                Matthew is a pianist living in Nashville.
-              </Card.Description>
-            </Card.Content>
-          </Card>
+        <Card.Group itemsPerRow={6} centered>
+          {this.renderCards()}
         </Card.Group>
         <br />
-        <Button loading={this.state.loading} onClick={this.load} primary>
-          Load
-        </Button>
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={12}>
+              <h3>Extra informatie</h3>
+              <p>Client address: {this.state.client}</p>
+              <p>Verzekeraar address: {this.state.insurance}</p>
+              <p>Zorgkantoor address: {this.state.careAdminOff}</p>
+              <p>Goedgekeurd: {this.state.isAccepted.toString()} </p>
+            </Grid.Column>
+            <Grid.Column width={4}>
+              <h3>Totaalprijs Declaratie</h3>
+              <h4>€{this.state.grandTotal}</h4>
+              
+              {/* <Image src="/assets/images/wireframe/paragraph.png" /> */}
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
       </Layout>
     );
   }
 }
-
+/*
+addressen: client, verzekeraar, zorgkantoor
+dateDeclaration
+dateEndDeclaration
+*/
 export default DeclarationShow;
+
+{
+  /* <Button loading={this.state.loading} onClick={this.load} primary>
+          Load
+        </Button> */
+}
+
+// load = async event => {
+//   const accounts = await web3.eth.getAccounts();
+//   this.setState({ loading: true, errorMessage: "" });
+//   try {
+//     const declaration = Declaration(this.props.address);
+//     const summary = await declaration.methods
+//       .getDeclaration()
+//       .call({ from: accounts[0] });
+//     this.setState({
+//       insurance: summary[0],
+//       client: summary[1],
+//       careAdminOff: summary[2],
+//       careCodes: summary[3].split(";"), // .join(";")
+//       careAmounts: summary[4].split(";"),
+//       carePrices: summary[5].split(";"), // .join(";")
+//       dateDeclaration: summary[6],
+//       dateEndDeclaration: summary[7],
+//       isValidated: summary[8],
+//       isAccepted: summary[9]
+//     });
+//   } catch (err) {
+//     console.log(err.message);
+//     this.setState({ errorMessage: err.message });
+//   }
+//   this.setState({ loading: false });
+//   console.log(this.state);
+// };
+
+// this.state.carePrices[i] = parseFloat(this.state.carePrices[i]).toFixed(2);
+// var b = ',';
+// var pos = a.length-2;
+// var output = c
