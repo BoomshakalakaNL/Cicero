@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Layout from "../../components/Layout";
-import { Button, Card, Grid, Image } from "semantic-ui-react";
+import { Button, Card, Grid, Image, Message, Form } from "semantic-ui-react";
 import Declaration from "../../ethereum/declaration";
 import web3 from "../../ethereum/web3";
 import { Link } from "../../routes";
@@ -87,18 +87,64 @@ class DeclarationShow extends Component {
               <p>Client address: {this.state.client}</p>
               <p>Verzekeraar address: {this.state.insurance}</p>
               <p>Zorgkantoor address: {this.state.careAdminOff}</p>
+              <p>
+                Goedgekeurd door Zorgkantoor:{" "}
+                {this.state.isValidated.toString()}
+              </p>
               <p>Goedgekeurd: {this.state.isAccepted.toString()} </p>
             </Grid.Column>
             <Grid.Column width={4}>
               <h3>Totaalprijs Declaratie</h3>
-              <h4>€{this.state.grandTotal}</h4>
+              <h1>€{this.state.grandTotal}</h1>
+              <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
+                <Button onClick={this.valideren} secondary>
+                  Valideren
+                </Button>
+                <Button
+                  onClick={this.goedkeuren}
+                  error={!!this.state.errorMessage}
+                  primary
+                >
+                  Goedkeuren
+                </Button>
 
-              {/* <Image src="/assets/images/wireframe/paragraph.png" /> */}
+                <Message error content={this.state.errorMessage} />
+              </Form>
             </Grid.Column>
           </Grid.Row>
         </Grid>
       </Layout>
     );
+  }
+
+  goedkeuren = async event => {
+    event.preventDefault();
+    const declaration = Declaration(this.props.address);
+    this.setState({ loading: true, errorMessage: "" });
+    try {
+      const accounts = await web3.eth.getAccounts();
+      await declaration.methods.accept().send({
+        from: accounts[0]
+      });
+    } catch (err) {
+      this.setState({ errorMessage: err.message });
+    }
+    this.setState({ loading: false });
+  };
+
+  valideren = async event => {
+    event.preventDefault();
+    const declaration = Declaration(this.props.address);
+    this.setState({ loading: true, errorMessage: "" });
+    try{
+      const accounts = await web3.eth.getAccounts();
+      await declaration.methods.validate().send({
+        from: accounts[0]
+      });
+    } catch (err) {
+      this.setState({ errorMessage: err.message });
+    }
+    this.setState ({ loading: false });
   }
 }
 /*
