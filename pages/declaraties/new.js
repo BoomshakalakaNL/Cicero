@@ -84,6 +84,7 @@ class NewDeclaration extends Component {
   }
 
   render() {
+    console.log(this.state.declarations);
     return (
       <Layout>
         <h4>Declarations</h4>

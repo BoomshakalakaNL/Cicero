@@ -3,19 +3,33 @@ export function getDeclarationFromSummary(CareCodes, CareAmounts, CarePrices){
   var careAmounts = CareAmounts.split(";");
   var carePrices = CarePrices.split(";");
 
-  var declarations = [{
-    code: '',
-    amount: 0,
-    price: 0
-  }];
+  var declarations = [];
 
   for( var i = 0; i < careCodes.length; i++ ){
-    declarations[i] = [{
+    declarations.push({
       code : careCodes[i],
-      amount : parseFloat(careAmounts[i]),
-      price : parseFloat(carePrices[i])/100
-    }];
+      amount : careAmounts[i],
+      price : toNumberString(parseFloat(carePrices[i])/100)
+    });
   }
 
   return declarations;
+}
+
+export function getGrandTotal(Declarations){
+  var grandTotal = 0;
+  var declarations = Declarations;
+  this.declarations.forEach( function (element) {
+    grandTotal += element.price;
+  });
+
+  return grandTotal;
+}
+
+export function toNumberString(num) {
+  if (Number.isInteger(num)) {
+    return num + ".00"
+  } else {
+    return num.toString();
+  }
 }
