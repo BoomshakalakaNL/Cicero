@@ -35,7 +35,7 @@ class DeclarationShow extends Component {
 
   renderCards() {
     var Cards = [];
-
+    var grandTotaal;
     for (var i = 0; i < this.state.careCodes.length; i++) {
       var a = this.state.carePrices[i];
       a = parseInt(
@@ -64,9 +64,8 @@ class DeclarationShow extends Component {
     }
     return Cards;
   }
+
   render() {
-    console.log(this.state.careCodes);
-    console.log(this.state.carePrices);
     return (
       <Layout>
         <h3>Declaratie details van adres: {this.props.address}</h3>
@@ -95,18 +94,19 @@ class DeclarationShow extends Component {
             </Grid.Column>
             <Grid.Column width={4}>
               <h3>Totaalprijs Declaratie</h3>
-              <h1>€{this.state.grandTotal}</h1>
+              <h1>€{this.calcGrandTotal().grandTotal}</h1>
               <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
-                <Button onClick={this.valideren} secondary>
-                  Valideren
-                </Button>
-                <Button
-                  onClick={this.goedkeuren}
-                  error={!!this.state.errorMessage}
-                  primary
-                >
-                  Goedkeuren
-                </Button>
+                {this.state.isValidated ? (
+                  this.state.isAccepted ? null : (
+                    <Button onClick={this.goedkeuren} primary>
+                      Goedkeuren
+                    </Button>
+                  )
+                ) : (
+                  <Button onClick={this.valideren} secondary>
+                    Valideren
+                  </Button>
+                )}
 
                 <Message error content={this.state.errorMessage} />
               </Form>
@@ -132,11 +132,32 @@ class DeclarationShow extends Component {
     this.setState({ loading: false });
   };
 
+  calcGrandTotal(){
+    var grandTotal = 0;
+    for (var i = 0; i < this.state.careCodes.length; i++) {
+      var a = this.state.carePrices[i];
+      a = parseInt(
+        this.state.carePrices[i].slice(0, this.state.carePrices[i].length - 2)
+      );
+      this.state.carePrices[i] = [
+        this.state.carePrices[i].slice(0, this.state.carePrices[i].length - 2),
+        ",",
+        this.state.carePrices[i].slice(this.state.carePrices[i].length - 2)
+      ].join("");
+      var totalPrice = parseFloat(this.state.careAmounts[i] * a).toFixed(2);
+      grandTotal += parseInt(totalPrice);
+      
+    } 
+    return {
+      grandTotal
+    };
+  }
+
   valideren = async event => {
     event.preventDefault();
     const declaration = Declaration(this.props.address);
-    this.setState({ loading: true, errorMessage: "" });
-    try{
+    this.setState({ loading: true, errorMessage: ""});
+    try {
       const accounts = await web3.eth.getAccounts();
       await declaration.methods.validate().send({
         from: accounts[0]
@@ -144,8 +165,8 @@ class DeclarationShow extends Component {
     } catch (err) {
       this.setState({ errorMessage: err.message });
     }
-    this.setState ({ loading: false });
-  }
+    this.setState({ loading: false });
+  };
 }
 /*
 addressen: client, verzekeraar, zorgkantoor
