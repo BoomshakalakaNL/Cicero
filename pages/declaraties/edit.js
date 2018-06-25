@@ -20,23 +20,11 @@ class EditDeclaration extends Component {
   }
   state = {
     errorMessage: "",
-    client: this.props.summary[1],
-    insurance: this.props.summary[0],
-    careAdminOff: this.props.summary[2],
-    careCodes: this.props.summary[3].split(";"),
-    careAmounts: this.props.summary[4].split(";"),
-    carePrices: this.props.summary[5].split(";"),
-    dateDeclaration: this.props.summary[6],
-    dateEndDeclaration: this.props.summary[7],
-    isValidated: this.props.summary[8],
-    isAccepted: this.props.summary[9],
     declarations: getDeclarationFromSummary(this.props.summary[3], this.props.summary[4], this.props.summary[5])
-    loading: false,
-    grandTotal: 0
   };
 
   render(){
-    console.log(this.props.summary);
+    console.log(this.state.declarations);
     return(
       <Layout>
         <h3>Bewerken declaratie</h3>
