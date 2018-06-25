@@ -4,6 +4,7 @@ import Layout from '../../components/Layout.js';
 import Declaration from "../../ethereum/declaration";
 import web3 from '../../ethereum/web3';
 import { Router } from '../../routes';
+import { getDeclarationFromSummary } from '../../scripts/main.js';
 
 class EditDeclaration extends Component {
   static async getInitialProps(props) {
@@ -29,6 +30,7 @@ class EditDeclaration extends Component {
     dateEndDeclaration: this.props.summary[7],
     isValidated: this.props.summary[8],
     isAccepted: this.props.summary[9],
+    declarations: getDeclarationFromSummary(this.props.summary[3], this.props.summary[4], this.props.summary[5])
     loading: false,
     grandTotal: 0
   };
