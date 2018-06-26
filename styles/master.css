@@ -42,6 +42,7 @@ i.purple.icon:hover {
 
 .ui.card:hover, .ui.cards>.card:hover {
   background-color: rgb(131,27,120);
-  color: white;
+  color: white!important;
   border: 1px solid #65b32e;
 }
+
