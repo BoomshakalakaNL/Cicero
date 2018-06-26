@@ -48,3 +48,9 @@ i.purple.icon:hover {
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
+
+.footer{
+ background: rgb(230, 230, 230);
+ padding-top: 50px;
+ margin-top: 20px;
+}
