@@ -20,4 +20,12 @@ i.purple.icon:hover {
 
 .ui.card, .ui.cards>.card {
   border: 1px solid #831b78;
+  box-shadow: 0;
+  border-radius: 0;
+  transition: all 0.3s;
+}
+
+.ui.card:hover, .ui.cards>.card:hover {
+  background-color: #65b32e;
+  color: white;
 }
