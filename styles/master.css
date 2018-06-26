@@ -17,3 +17,7 @@ i.purple.icon {
 i.purple.icon:hover {
     color: #65b32e!important;
 }
+
+.ui.card, .ui.cards>.card {
+  border: 1px solid #831b78;
+}
