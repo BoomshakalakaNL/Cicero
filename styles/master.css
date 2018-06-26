@@ -1,6 +1,17 @@
 h1,h2,h3,h4,h5{
   color: #65b32e;
 }
+
+a {
+ color: #65b32e;
+ text-decoration: underline;
+ transition: all 0.3s;
+}
+
+a:hover { 
+ color: #831b78!important; 
+}
+
 .header{
   padding: 1.25rem 0;
 }
