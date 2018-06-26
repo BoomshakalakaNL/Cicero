@@ -37,6 +37,7 @@ i.purple.icon:hover {
 }
 
 .ui.card:hover, .ui.cards>.card:hover {
-  background-color: #65b32e;
+  background-color: rgba(131,27,120, 0.5);
   color: white;
+  border: #65b32e;
 }
