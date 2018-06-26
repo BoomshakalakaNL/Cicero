@@ -12,7 +12,7 @@ a:hover {
  color: #831b78!important; 
 }
 
-a i {
+i {
   text-decoration: none;
 }
 
@@ -36,12 +36,12 @@ i.purple.icon:hover {
 .ui.card, .ui.cards>.card {
   border: 1px solid #831b78;
   box-shadow: 0;
-  border-radius: 0;
+  border-radius: 2px;
   transition: all 0.3s;
 }
 
 .ui.card:hover, .ui.cards>.card:hover {
   background-color: rgba(131,27,120, 0.5);
   color: white;
-  border: #65b32e;
+  border: 1px solid #65b32e;
 }
