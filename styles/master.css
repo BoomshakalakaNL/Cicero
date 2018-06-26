@@ -4,16 +4,11 @@ h1,h2,h3,h4,h5{
 
 a {
  color: #65b32e;
- text-decoration: underline;
  transition: all 0.3s;
 }
 
 a:hover { 
  color: #831b78!important; 
-}
-
-i {
-  text-decoration: none;
 }
 
 .header{
@@ -41,8 +36,6 @@ i.purple.icon:hover {
 }
 
 .ui.card:hover, .ui.cards>.card:hover {
-  background-color: rgb(131,27,120);
-  color: white!important;
   border: 1px solid #65b32e;
 }
 
