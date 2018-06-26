@@ -1,5 +1,11 @@
-h1,h2,h3,h4,h5{
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans|Raleway');
+*{
+ font-family: 'Raleway', sans-serif; 
+}
+
+h1,h2,h3,h4,h5,h6{
   color: #65b32e;
+  font-family: 'Noto Sans', sans-serif!important;
 }
 
 a {
