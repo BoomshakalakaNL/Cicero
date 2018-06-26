@@ -53,4 +53,11 @@ i.purple.icon:hover {
  background: rgb(230, 230, 230);
  padding-top: 50px;
  margin-top: 20px;
+ padding-bottom: 50px;
+}
+
+.subfooter{
+ background: #58585a;
+ color: white!important;
+ min-height: 50px;
 }
