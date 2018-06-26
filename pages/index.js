@@ -1,6 +1,6 @@
 import factory from '../ethereum/factory';
 import React, { Component } from 'react';
-import { Card, Button } from 'semantic-ui-react';
+import { Card, Button, Container, Grid, Icon } from 'semantic-ui-react';
 import Layout from '../components/Layout.js';
 import { Link } from '../routes.js';
 
@@ -26,14 +26,29 @@ class DeclarationIndex extends Component{
       };
     });
 
-    return <Card.Group items={items} />;
+    return <Card.Group class='cicero-card' items={items} />;
   }
 
   render() {
     return (
       <Layout>
-        <h3>Declaraties</h3>
-        {this.renderDeclarations()}
+        <div  class="display">
+          <Container>
+            <Grid verticalAlign='middle'>
+              <Grid.Column floated='left' width={5}>
+                <h1>Declaraties</h1>
+              </Grid.Column>
+              <Grid.Column floated='right' style={{textAlign: 'right'}} width={5}>
+                <Link route='/declaraties/new'>
+                  <a><Icon color='purple' name="add" size='big'/></a>
+                </Link>
+              </Grid.Column>
+            </Grid>
+          </Container>
+        </div>
+        <Container>
+          {this.renderDeclarations()}
+        </Container>
       </Layout>
     );
   }

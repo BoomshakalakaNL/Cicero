@@ -1,22 +1,21 @@
 import React from 'react';
-import { Menu, Icon } from 'semantic-ui-react';
+import { Menu, Icon, Container, Grid, Image } from 'semantic-ui-react';
 import { Link } from '../routes';
 
 export default () => {
-  return (
-    <Menu style={{marginTop: '10px'}}>
-      <Link route='/'>
-        <a className='item'>Cicero Declaraties</a>
-      </Link>
+  const src = 'https://www.cicerozorggroep.nl/assets/img/logo.png';
 
-      <Menu.Menu position="right">
-        <Link route='/'>
-          <a className='item'>Declaraties</a>
-        </Link>
-        <Link route='/declaraties/new'>
-          <a className='item'><Icon name="add square"/></a>
-        </Link>
-      </Menu.Menu>
-    </Menu>
+  return (
+    <div class='header'>
+     <Container>
+       <Grid verticalAlign='middle'>
+         <Grid.Column align='right'>
+           <Link route='/'>
+             <a className='item'><Image src={src} size='small' /></a>
+           </Link>
+         </Grid.Column>
+       </Grid>
+     </Container>
+    </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Layout from "../../components/Layout";
-import { Button, Card, Grid, Image, Message, Form } from "semantic-ui-react";
+import { Icon, Button, Card, Grid, Image, Message, Form, Container } from "semantic-ui-react";
 import Declaration from "../../ethereum/declaration";
 import web3 from "../../ethereum/web3";
 import { Link } from "../../routes";
@@ -68,18 +68,29 @@ class DeclarationShow extends Component {
   render() {
     return (
       <Layout>
-        <h3>Declaratie details van adres: {this.props.address}</h3>
+      <div  class="display">
+        <Container>
+          <Grid verticalAlign='middle'>
+            <Grid.Column floated='left' width={5}>
+              <h1>Details declaratie: <span style={{color: '#58585a'}}>{this.props.address}</span></h1>
+            </Grid.Column>
+            <Grid.Column floated='right' style={{textAlign: 'right'}} width={5}>
+              <Link route={`/declaraties/${this.props.address}/edit`}>
+                <a><Icon color='purple' name="edit" size='big'/></a>
+              </Link>
+            </Grid.Column>
+          </Grid>
+        </Container>
+      </div>
+        <Container>
         {/* <p>Declaratie address: </p> */}
-        <h4>Overzicht geleverde zorg</h4>
-        <Link route={`/declaraties/${this.props.address}/edit`}>
-          <a>Bewerk details</a>
-        </Link>
+        <h2>Overzicht geleverde zorg</h2>
         <br />
         <Card.Group itemsPerRow={6} centered>
           {this.renderCards()}
         </Card.Group>
         <br />
-        <Grid>
+        <Grid style={{border: '1px solid #831b78', margin: '0 10px'}}>
           <Grid.Row>
             <Grid.Column width={12}>
               <h3>Extra informatie</h3>
@@ -113,6 +124,7 @@ class DeclarationShow extends Component {
             </Grid.Column>
           </Grid.Row>
         </Grid>
+        </Container>
       </Layout>
     );
   }
@@ -146,8 +158,8 @@ class DeclarationShow extends Component {
       ].join("");
       var totalPrice = parseFloat(this.state.careAmounts[i] * a).toFixed(2);
       grandTotal += parseInt(totalPrice);
-      
-    } 
+
+    }
     return {
       grandTotal
     };
@@ -213,5 +225,3 @@ export default DeclarationShow;
 // var b = ',';
 // var pos = a.length-2;
 // var output = c
-
-
