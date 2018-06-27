@@ -65,4 +65,9 @@ i.purple.icon:hover {
 .primary{
  background-color: #831b78!important;
  color: white!important;
+ transition: all 0.3s;
+}
+
+.primary:hover{
+  background-color: #65b32e!important;
 }
