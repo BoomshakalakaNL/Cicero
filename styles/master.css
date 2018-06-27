@@ -61,3 +61,8 @@ i.purple.icon:hover {
  color: white!important;
  min-height: 50px;
 }
+
+.primary{
+ background-color: #65b32e!important;
+ color: white!important;
+}
