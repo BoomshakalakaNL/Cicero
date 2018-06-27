@@ -97,6 +97,10 @@ class NewDeclaration extends Component {
           </Container>
         </div>
         <Container>
+          <Message info
+            icon='help'
+            content='In onderstaand formulier, kunt u als zorgverlener een declaratie aanmaken. Een adress is het wallet addres van een client of zorgverzekaraar (bv. 0x19514Fd989CC7b248c4fEbc1881f54a17C1570Fa).Om een nieuwe declaratie code toe te voegen, drukt op op de knop Code toevoegen. Wilt u deze of een andere code verwijderen dan drukt u op de knop Code verwijderen. Zijn de aanpassingen klaar dan kunt u op de knop verstuur klikken.'
+          />
           <Form onSubmit={this.handleSubmit} loading={this.state.loading} error={!!this.state.errorMessage}>
             <Form.Field>
               <label>Address van Verzekeraar:</label>
@@ -144,12 +148,12 @@ class NewDeclaration extends Component {
                   <label>Prijs</label>
                   <Input fluid type='number' placeholder='1800' value={declaration.price} onChange={this.handleDeclarationPriceChange(idx)}/>
                 </Form.Field>
-                <Button type="button" style={{height: '38px', marginTop: '23px'}} onClick={this.handleRemoveDeclaration(idx)} warning>Remove</Button>
+                <Button type="button" style={{height: '38px', marginTop: '23px'}} onClick={this.handleRemoveDeclaration(idx)} negative>Verwijderen</Button>
               </Form.Group>
             ))}
-            <Button type="button" onClick={this.handleAddDeclaration} className="small" success>Add Declaration</Button>
+            <Button type="button" onClick={this.handleAddDeclaration} className="small" positive>Code toevoegen</Button>
             <br/>
-            <Button type="submit" style={{marginTop: '40px'}} primary>Verstuur</Button>
+            <Button type="submit" style={{marginTop: '40px'}} primary fluid>Verstuur</Button>
           </Form>
         </Container>
       </Layout>

@@ -1,4 +1,5 @@
 import factory from '../ethereum/factory';
+import Declaration from '../ethereum/declaration';
 import React, { Component } from 'react';
 import { Card, Button, Container, Grid, Icon } from 'semantic-ui-react';
 import Layout from '../components/Layout.js';
@@ -14,6 +15,19 @@ class DeclarationIndex extends Component{
 
   renderDeclarations() {
     const items = this.props.declarations.map(address => {
+      /*let declaration = new Declaration(address);
+      let isValidated = "test";
+      let isAccepted = "test";
+      declaration.methods.isAccepted().call().then(result => {
+        isAccepted = result;
+        console.log('Accepted: '+result);
+      });
+      declaration.methods.isValidated().call().then(result => {
+        isValidated = result;
+        console.log('Validated: '+result);
+      });*/
+      var cardStyle = getCardStyle(address);
+      //console.log('Validated: '+isValidated+ '; Accepted: '+isAccepted);
       return {
         header: address,
         description: (
@@ -28,6 +42,8 @@ class DeclarationIndex extends Component{
 
     return <Card.Group class='cicero-card' items={items} />;
   }
+
+
 
   render() {
     return (
