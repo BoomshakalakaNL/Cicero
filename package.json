@@ -10,9 +10,12 @@
 				"author": "",
 				"license": "ISC",
 				"dependencies": {
+								"fs": "0.0.1-security",
 								"fs-extra": "^6.0.1",
 								"ganache-cli": "^6.1.0",
 								"mocha": "^5.2.0",
+								"mysql": "github:mysqljs/mysql",
+								"net": "^1.0.2",
 								"next": "^4.1.4",
 								"next-routes": "^1.4.2",
 								"react": "^16.4.0",
@@ -21,6 +24,7 @@
 								"semantic-ui-css": "^2.3.1",
 								"semantic-ui-react": "^0.80.2",
 								"solc": "^0.4.24",
+								"tls": "0.0.1",
 								"truffle-hdwallet-provider": "0.0.5",
 								"web3": "^1.0.0-beta.34"
 				},
