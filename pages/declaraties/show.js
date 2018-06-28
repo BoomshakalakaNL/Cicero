@@ -5,6 +5,7 @@ import Declaration from "../../ethereum/declaration";
 import web3 from "../../ethereum/web3";
 import { Link } from "../../routes";
 import productInfo from '../../productInformation.json';
+import clientInfo from '../../clientInformation.json';
 
 class DeclarationShow extends Component {
   static async getInitialProps(props) {
@@ -33,6 +34,19 @@ class DeclarationShow extends Component {
     loading: false,
     grandTotal: 0
   };
+
+  getClientName (address){  
+    let name;
+    
+    clientInfo.map(function(clientName){
+      if (address.toString() == clientName.id){  
+        name = clientName.name;
+        return;
+      }
+    })
+    return name;
+  }
+
   getProductName (code){  
     let name;
     
@@ -110,6 +124,7 @@ class DeclarationShow extends Component {
           <Grid.Row>
             <Grid.Column width={12}>
               <h3>Extra informatie</h3>
+              <p>Client naam: <b>{this.getClientName(this.state.client)}</b></p>
               <p>Client address: {this.state.client}</p>
               <p>Verzekeraar address: {this.state.insurance}</p>
               <p>Zorgkantoor address: {this.state.careAdminOff}</p>
