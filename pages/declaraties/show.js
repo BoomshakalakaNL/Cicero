@@ -4,6 +4,7 @@ import { Icon, Button, Card, Grid, Image, Message, Form, Container } from "seman
 import Declaration from "../../ethereum/declaration";
 import web3 from "../../ethereum/web3";
 import { Link } from "../../routes";
+import productInfo from '../../productInformation.json';
 
 class DeclarationShow extends Component {
   static async getInitialProps(props) {
@@ -32,6 +33,17 @@ class DeclarationShow extends Component {
     loading: false,
     grandTotal: 0
   };
+  getProductName (code){  
+    let name;
+    
+    productInfo.map(function(product){
+      if (code == product.id){  
+        name = product.name;
+        return;
+      }
+    })
+    return name;
+  }
 
   renderCards() {
     var Cards = [];
@@ -54,6 +66,8 @@ class DeclarationShow extends Component {
             <Card.Header>{this.state.careCodes[i]}</Card.Header>
             <Card.Meta>
               {this.state.careAmounts[i]} x €{this.state.carePrices[i]}
+              <br/>
+              {this.getProductName(this.state.careCodes[i])}
             </Card.Meta>
             <Card.Description>
               <h3>Totaal: €{totalPrice}</h3>

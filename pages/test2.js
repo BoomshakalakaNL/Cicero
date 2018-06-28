@@ -5,6 +5,7 @@ import web3 from "../ethereum/web3";
 import { Card, Button, Container, Grid, Icon } from 'semantic-ui-react';
 import { Link } from '../routes.js';
 import Layout from '../components/Layout.js';
+import clientInfo from '../clientInformation.json';
 
 class Test2 extends Component{
 
@@ -32,6 +33,19 @@ class Test2 extends Component{
 
     return {declarationAddresses, data};
   }
+  
+  getClientName (address){  
+    let name;
+    
+    clientInfo.map(function(clientName){
+      if (address.toString() == clientName.id){  
+        name = clientName.name;
+        return;
+      }
+    })
+    return name;
+  }
+
 
   async componentDidMount() {
     let accounts = await web3.eth.getAccounts();
@@ -60,18 +74,6 @@ class Test2 extends Component{
     //NOTE: Check the statement and return something nice if the currentAccount is not a stakeholder
     return(
       <Layout>
-        <pre>
-          <ul>
-          {this.props.data.map(element => {
-            if (this.state.currentAccount == element.careAdminOff || this.state.currentAccount == element.client || this.state.insurance)  {
-              return ( <li>{element.address}, Validated: {element.isValidated.toString()}, Accepted: {element.isAccepted.toString()}</li> )
-            }
-            else {
-              return ( null )
-            }
-          })}
-          </ul>
-        </pre>
         <Container>
           <Card.Group>
             {this.props.data.map(element => {
@@ -80,7 +82,7 @@ class Test2 extends Component{
                   <Card fluid style={{borderRight: this.getCardStyle(element.isValidated, element.isAccepted)}}>
                     <Card.Content>
                       <Card.Header>{element.address}</Card.Header>
-                      <Card.Meta>{element.client}</Card.Meta>
+                      <Card.Meta>{element.client} - {this.getClientName(element.client)}</Card.Meta>
                       <Card.Description>
                         <Link route={`/declaraties/${element.address}`}><a>Bekijk details</a></Link>
                       </Card.Description>
