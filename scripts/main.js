@@ -36,6 +36,7 @@ export function toNumberString(num) {
 
 import clientInfo from '../clientInformation.json';
 import productInfo from '../productInformation.json';
+import otherInfo from '../otherInformation.json';
 
 export function  getClientName (address){  
   let name;
@@ -55,6 +56,18 @@ export function getProductName (code){
   productInfo.map(function(product){
     if (code == product.id){  
       name = product.name;
+      return;
+    }
+  })
+  return name;
+}
+
+export function getOtherInformation (address){  
+  let name;
+  
+  otherInfo.map(function(info){
+    if (address == info.id){  
+      name = info.name;
       return;
     }
   })

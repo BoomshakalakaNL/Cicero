@@ -4,7 +4,7 @@ import { Icon, Button, Card, Grid, Image, Message, Form, Container } from "seman
 import Declaration from "../../ethereum/declaration";
 import web3 from "../../ethereum/web3";
 import { Link } from "../../routes";
-import { getClientName, getProductName} from '../../scripts/main.js';
+import { getClientName, getProductName, getOtherInformation} from '../../scripts/main.js';
 
 class DeclarationShow extends Component {
   static async getInitialProps(props) {
@@ -102,8 +102,8 @@ class DeclarationShow extends Component {
               <h3>Extra informatie</h3>
               <p>Client naam: <b>{getClientName(this.state.client)}</b></p>
               <p>Client address: {this.state.client}</p>
-              <p>Verzekeraar address: {this.state.insurance}</p>
-              <p>Zorgkantoor address: {this.state.careAdminOff}</p>
+              <p>Verzekeraar address: {this.state.insurance} - <b>{getOtherInformation(this.state.insurance)}</b></p>
+              <p>Zorgkantoor address: {this.state.careAdminOff}- <b>{getOtherInformation(this.state.careAdminOff)}</b></p>
               <p>
                 Goedgekeurd door Zorgkantoor:{" "}
                 {this.state.isValidated.toString()}
