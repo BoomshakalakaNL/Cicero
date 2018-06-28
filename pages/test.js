@@ -4,6 +4,7 @@ import { Icon, Button, Card, Grid, Image, Message, Form, Container } from "seman
 import Declaration from "../ethereum/declaration";
 import factory from '../ethereum/factory';
 import web3 from "../ethereum/web3";
+import { sleep } from '../scripts/main.js';
 
 class Test extends Component{
   static async getInitialProps(){
@@ -21,7 +22,7 @@ class Test extends Component{
   async componentDidMount() {
     let declarations = [];
     let accounts = await web3.eth.getAccounts();
-    this.props.declarations.forEach( async function (element) {
+    await this.props.declarations.forEach( async function (element) {
       let declaration = new Declaration(element);
       let isValidated = await declaration.methods.isValidated().call({from: accounts[0]});
       let isAccepted = await declaration.methods.isAccepted().call({from: accounts[0]});
@@ -31,12 +32,15 @@ class Test extends Component{
         isValidated: isValidated,
         isAccepted: isAccepted
       });
+      console.log('Fetched');
+      this.setState({data: this.declarations});
+      console.log(this.state.data);
+      console.log('Update');
+      this.forceUpdate();
     });
-    this.setState({data: declarations});
-    console.log(this.state.data);
-    this.forceUpdate();
 
   }
+
 
   getCardStyle(IsValidated, IsAccepted){
     return '30px solid pink';
