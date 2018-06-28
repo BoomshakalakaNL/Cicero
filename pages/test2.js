@@ -5,7 +5,8 @@ import web3 from "../ethereum/web3";
 import { Card, Button, Container, Grid, Icon } from 'semantic-ui-react';
 import { Link } from '../routes.js';
 import Layout from '../components/Layout.js';
-import clientInfo from '../clientInformation.json';
+
+import { getClientName } from '../scripts/main.js';
 
 class Test2 extends Component{
 
@@ -33,19 +34,6 @@ class Test2 extends Component{
 
     return {declarationAddresses, data};
   }
-  
-  getClientName (address){  
-    let name;
-    
-    clientInfo.map(function(clientName){
-      if (address.toString() == clientName.id){  
-        name = clientName.name;
-        return;
-      }
-    })
-    return name;
-  }
-
 
   async componentDidMount() {
     let accounts = await web3.eth.getAccounts();
@@ -82,7 +70,7 @@ class Test2 extends Component{
                   <Card fluid style={{borderRight: this.getCardStyle(element.isValidated, element.isAccepted)}}>
                     <Card.Content>
                       <Card.Header>{element.address}</Card.Header>
-                      <Card.Meta>{element.client} - {this.getClientName(element.client)}</Card.Meta>
+                      <Card.Meta>{element.client} - {getClientName(element.client)}</Card.Meta>
                       <Card.Description>
                         <Link route={`/declaraties/${element.address}`}><a>Bekijk details</a></Link>
                       </Card.Description>

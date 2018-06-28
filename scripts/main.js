@@ -34,12 +34,29 @@ export function toNumberString(num) {
   }
 }
 
+import clientInfo from '../clientInformation.json';
+import productInfo from '../productInformation.json';
 
-export function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
+export function  getClientName (address){  
+  let name;
+  
+  clientInfo.map(function(clientName){
+    if (address.toString() == clientName.id){  
+      name = clientName.name;
+      return;
     }
-  }
+  })
+  return name;
+}
+
+export function getProductName (code){  
+  let name;
+  
+  productInfo.map(function(product){
+    if (code == product.id){  
+      name = product.name;
+      return;
+    }
+  })
+  return name;
 }
