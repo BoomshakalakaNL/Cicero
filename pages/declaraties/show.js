@@ -74,11 +74,13 @@ class DeclarationShow extends Component {
             <Grid.Column floated='left' width={9}>
               <h1>Details declaratie: <span style={{color: '#58585a'}}>{this.props.address}</span></h1>
             </Grid.Column>
+            {this.state.isValidated ? null : (
             <Grid.Column floated='right' style={{textAlign: 'right'}} width={1}>
               <Link route={`/declaraties/${this.props.address}/edit`}>
                 <a><Icon color='purple' name="edit" size='big'/></a>
               </Link>
             </Grid.Column>
+            ) }
           </Grid>
         </Container>
       </div>

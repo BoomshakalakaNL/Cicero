@@ -26,7 +26,7 @@ class DeclarationIndex extends Component{
         isValidated = result;
         console.log('Validated: '+result);
       });*/
-      var cardStyle = getCardStyle(address);
+      //var cardStyle = getCardStyle(address);
       //console.log('Validated: '+isValidated+ '; Accepted: '+isAccepted);
       return {
         header: address,
