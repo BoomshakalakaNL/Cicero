@@ -18,17 +18,28 @@ class Test extends Component{
       summary: []
     };
   }
-  componentDidMount() {
-    let accounts = [];
-    web3.eth.getAccounts()
-      .then(res => accounts = res);
-    this.props.declarations.forEach( function (element) {
-      console.log(element + '; Account: '+accounts[0]);
+  async componentDidMount() {
+    let declarations = [];
+    let accounts = await web3.eth.getAccounts();
+    this.props.declarations.forEach( async function (element) {
+      let declaration = new Declaration(element);
+      let isValidated = await declaration.methods.isValidated().call({from: accounts[0]});
+      let isAccepted = await declaration.methods.isAccepted().call({from: accounts[0]});
+      //console.log('Declaration: '+element+'; isValidated: '+isValidated+'; isAccepted: '+isAccepted);
+      declarations.push({
+        declaration: element,
+        isValidated: isValidated,
+        isAccepted: isAccepted
+      });
     });
-    fetch(`https://api.coinmarketcap.com/v1/ticker/?limit=20`)
-      .then(res => res.json())
-      .then(json => this.setState({ data: json }));
+    this.setState({data: declarations});
+    console.log(this.state.data);
+    this.forceUpdate();
 
+  }
+
+  getCardStyle(IsValidated, IsAccepted){
+    return '30px solid pink';
   }
 
   render() {
@@ -43,11 +54,10 @@ class Test extends Component{
           <ul>
             {this.state.data.map(el => (
               <li>
-                {el.name}: {el.price_usd}
+                {el.declaration}: {el.isValidated.toString()} : {el.isAccepted.toString()}
               </li>
             ))}
           </ul>
-
         </Container>
       </Layout>
     );
