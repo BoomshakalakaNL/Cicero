@@ -1,52 +1,99 @@
-import factory from '../ethereum/factory';
-import Declaration from '../ethereum/declaration';
 import React, { Component } from 'react';
-import { Card, Button, Container, Grid, Icon } from 'semantic-ui-react';
-import Layout from '../components/Layout.js';
+import Declaration from "../ethereum/declaration";
+import factory from '../ethereum/factory';
+import web3 from "../ethereum/web3";
+import { Card, Button, Container, Grid, Icon, Message } from 'semantic-ui-react';
 import { Link } from '../routes.js';
+import Layout from '../components/Layout.js';
 
+import { getClientName } from '../scripts/main.js';
 
 class DeclarationIndex extends Component{
-  static async getInitialProps(){
-    const declarations = await factory.methods.getDeclarations().call();
 
-    return { declarations };
+  static async getInitialProps(){
+    const declarationAddresses = await factory.methods.getDeclarations().call();
+    var data = [];
+
+    for (var i = 0; i < declarationAddresses.length; i++) {
+      var declaration = new Declaration(declarationAddresses[i]);
+      var isValidated = await declaration.methods.isValidated().call();
+      var isAccepted = await declaration.methods.isAccepted().call();
+
+      var insurance = await declaration.methods.insurance().call();
+      var client = await declaration.methods.client().call();
+      var careAdminOff = await declaration.methods.careAdminOff().call();
+      data.push({
+        address: declarationAddresses[i],
+        isValidated: isValidated,
+        isAccepted: isAccepted,
+        client: client,
+        careAdminOff: careAdminOff,
+        insurance: insurance
+      });
+    }
+    return {declarationAddresses, data};
+  }
+
+  async componentDidMount() {
+    let accounts = await web3.eth.getAccounts();
+    this.setState({currentAccount: accounts[0]});
+    let data = [];
+    this.props.data.map(element => {
+      if (this.state.currentAccount == element.careAdminOff || this.state.currentAccount == element.client || this.state.insurance)  {
+        data.push(element);
+      }
+    });
+    this.setState({data: data});
+  }
+
+  state = {
+    currentAccount: "",
+    data: []
+  }
+
+
+  getCardStyle(IsValidated, IsAccepted){
+    if (!IsValidated){
+      return '50px solid #831b78';
+    }
+    if (IsValidated && IsAccepted){
+      return '50px solid #65b32e';
+    }
+    else {
+      return '50px solid orange';
+    }
   }
 
   renderDeclarations() {
-    const items = this.props.declarations.map(address => {
-      /*let declaration = new Declaration(address);
-      let isValidated = "test";
-      let isAccepted = "test";
-      declaration.methods.isAccepted().call().then(result => {
-        isAccepted = result;
-        console.log('Accepted: '+result);
+    if ( this.state.data.length > 0){
+      const items = this.state.data.map(element => {
+        return {
+          header: element.address,
+          description: (
+            <Link route={`/declaraties/${element.address}`}>
+              <a>Bekijk details</a>
+            </Link>
+            ),
+          fluid: true,
+          meta: getClientName(element.client) + " - " + element.client,
+          style: { overflowWrap: 'break-word', borderRight: this.getCardStyle(element.isValidated, element.isAccepted) }
+        };
       });
-      declaration.methods.isValidated().call().then(result => {
-        isValidated = result;
-        console.log('Validated: '+result);
-      });*/
-      //var cardStyle = getCardStyle(address);
-      //console.log('Validated: '+isValidated+ '; Accepted: '+isAccepted);
-      return {
-        header: address,
-        description: (
-          <Link route={`/declaraties/${address}`}>
-            <a>Bekijk details</a>
-          </Link>
-          ),
-        fluid: true,
-        style: { overflowWrap: 'break-word' }
-      };
-    });
-
-    return <Card.Group class='cicero-card' items={items} />;
+  
+      return <Card.Group class='cicero-card' items={items} />;
+    }
+    else {
+      return (
+        <Message info
+          icon='help'
+          content='Bij het controleren van uw wallet address hebben wij geen declaraties gevonden die u mag inzien.'
+        />
+      );
+    }
   }
 
-
-
-  render() {
-    return (
+  render(){
+    return(
       <Layout>
         <div  class="display">
           <Container>
@@ -69,5 +116,4 @@ class DeclarationIndex extends Component{
     );
   }
 }
-
 export default DeclarationIndex;

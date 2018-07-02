@@ -16,13 +16,13 @@ export function getDeclarationFromSummary(CareCodes, CareAmounts, CarePrices){
   return declarations;
 }
 
-export function getGrandTotal(Declarations){
+export function getGrandTotal(CareAmounts, CarePrices){
   var grandTotal = 0;
-  var declarations = Declarations;
-  this.declarations.forEach( function (element) {
-    grandTotal += element.price;
-  });
-
+  var careAmounts = CareAmounts.split(";");
+  var carePrices = CarePrices.split(";");
+  for ( var i = 0; i < carePrices.length; i++ ){
+    grandTotal += parseInt(careAmounts[i]) * (parseFloat(carePrices[i])/100);
+  }
   return grandTotal;
 }
 

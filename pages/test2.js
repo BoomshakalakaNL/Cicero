@@ -41,10 +41,10 @@ class Test2 extends Component{
     let data = [];
     this.props.data.map(element => {
       if (this.state.currentAccount == element.careAdminOff || this.state.currentAccount == element.client || this.state.insurance)  {
-        this.data.push(element);
+        data.push(element);
       }
     });
-    this.setState({data: this.data});
+    this.setState({data: data});
     console.log(this.state.data);
   }
 
@@ -63,6 +63,34 @@ class Test2 extends Component{
     }
     else {
       return '50px solid orange';
+    }
+  }
+
+  renderDeclarations() {
+    if ( this.state.data.length > 0){
+      const items = this.state.data.map(element => {
+        return {
+          header: element.address,
+          description: (
+            <Link route={`/declaraties/${element.address}`}>
+              <a>Bekijk details</a>
+            </Link>
+            ),
+          fluid: true,
+          meta: getClientName(element.client) + " - " + element.client,
+          style: { overflowWrap: 'break-word', borderRight: this.getCardStyle(element.isValidated, element.isAccepted) }
+        };
+      });
+  
+      return <Card.Group class='cicero-card' items={items} />;
+    }
+    else {
+      return (
+        <Message info
+          icon='help'
+          content='Bij het controleren van uw wallet address hebben wij geen declaraties gevonden die u mag inzien.'
+        />
+      );
     }
   }
 
@@ -85,7 +113,17 @@ class Test2 extends Component{
           </Container>
         </div>
         <Container>
-          <Card.Group>
+          {this.renderDeclarations()}
+        </Container>
+      </Layout>
+    );
+  }
+}
+export default Test2;
+
+/*
+
+<Card.Group>
             {this.props.data.map(element => {
               if (this.state.currentAccount == element.careAdminOff || this.state.currentAccount == element.client || this.state.insurance)  {
                 return (
@@ -110,9 +148,5 @@ class Test2 extends Component{
               }
             })}
           </Card.Group>
-        </Container>
-      </Layout>
-    );
-  }
-}
-export default Test2;
+
+*/
