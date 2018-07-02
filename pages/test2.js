@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Declaration from "../ethereum/declaration";
 import factory from '../ethereum/factory';
 import web3 from "../ethereum/web3";
-import { Card, Button, Container, Grid, Icon } from 'semantic-ui-react';
+import { Card, Button, Container, Grid, Icon, Message } from 'semantic-ui-react';
 import { Link } from '../routes.js';
 import Layout from '../components/Layout.js';
 
@@ -31,13 +31,21 @@ class Test2 extends Component{
         insurance: insurance
       });
     }
-
+    console.log(data);
     return {declarationAddresses, data};
   }
 
   async componentDidMount() {
     let accounts = await web3.eth.getAccounts();
     this.setState({currentAccount: accounts[0]});
+    let data = [];
+    this.props.data.map(element => {
+      if (this.state.currentAccount == element.careAdminOff || this.state.currentAccount == element.client || this.state.insurance)  {
+        this.data.push(element);
+      }
+    });
+    this.setState({data: this.data});
+    console.log(this.state.data);
   }
 
   state = {
@@ -48,10 +56,10 @@ class Test2 extends Component{
 
   getCardStyle(IsValidated, IsAccepted){
     if (!IsValidated){
-      return '50px solid pink';
+      return '50px solid #831b78';
     }
     if (IsValidated && IsAccepted){
-      return '50px solid green';
+      return '50px solid #65b32e';
     }
     else {
       return '50px solid orange';
@@ -62,6 +70,20 @@ class Test2 extends Component{
     //NOTE: Check the statement and return something nice if the currentAccount is not a stakeholder
     return(
       <Layout>
+        <div  class="display">
+          <Container>
+            <Grid verticalAlign='middle'>
+              <Grid.Column floated='left' width={5}>
+                <h1>Declaraties</h1>
+              </Grid.Column>
+              <Grid.Column floated='right' style={{textAlign: 'right'}} width={5}>
+                <Link route='/declaraties/new'>
+                  <a><Icon color='purple' name="add" size='big'/></a>
+                </Link>
+              </Grid.Column>
+            </Grid>
+          </Container>
+        </div>
         <Container>
           <Card.Group>
             {this.props.data.map(element => {
@@ -79,7 +101,12 @@ class Test2 extends Component{
                 )
               }
               else {
-                return ( null )
+                return (
+                  <Message info
+                    icon='help'
+                    content='Bij het controleren van uw wallet address hebben wij geen declaraties gevonden die u mag inzien.'
+                  />
+                )
               }
             })}
           </Card.Group>
