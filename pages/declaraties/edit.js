@@ -1,35 +1,55 @@
 import React, { Component } from 'react';
-import { Button, Form, Input, Message, Container, Grid } from 'semantic-ui-react';
+import { Button, Form, Input, Message, Container, Grid, Select } from 'semantic-ui-react';
 import Layout from '../../components/Layout.js';
 import Declaration from "../../ethereum/declaration";
 import web3 from '../../ethereum/web3';
 import { Router } from '../../routes';
-import { getDeclarationFromSummary, getGrandTotal, toNumberString } from '../../scripts/main.js';
+import { getDeclarationFromSummary, toNumberString } from '../../scripts/main';
 
-class EditDeclaration extends Component {
+class EditDeclaration extends Component{
   static async getInitialProps(props) {
-    const accounts = await web3.eth.getAccounts();
-    const declaration = Declaration(props.query.address);
-    const summary = await declaration.methods
-      .getDeclaration()
-      .call({ from: accounts[0] });
-    return {
-      accounts: accounts,
-      address: props.query.address,
-      declaration : declaration,
-      summary: summary
-    };
+      const declaration = new Declaration(props.query.address);
+      const isValidated = await declaration.methods.isValidated().call();
+      const careAdminOff = await declaration.methods.careAdminOff().call();
+      return {
+        address: props.query.address,
+        isValidated: isValidated,
+        careAdminOff: careAdminOff
+      };
   }
+
+  async componentDidMount(){
+    const accounts = await web3.eth.getAccounts();
+    if (accounts[0] == this.props.careAdminOff){
+      const declaration = new Declaration(this.props.address);
+      const summary = await declaration.methods.getDeclaration().call({from: accounts[0]});
+      this.setState({
+          client: summary[1],
+          insurance: summary[0],
+          declarations: getDeclarationFromSummary(summary[3], summary[4], summary[5]),
+          dateDeclaration: summary[6],
+          dateEndDeclaration: summary[7],
+          mayEdit: true,
+          errorMessage: ''
+      });
+    }
+    else {
+      this.setState({errorMessage: 'U heeft geen rechten voor het bewerken van deze declaratie.'})
+    }
+  }
+
   state = {
-    insurance : this.props.summary[0],
-    client: this.props.summary[1],
-    dateDeclaration: this.props.summary[6],
-    dateEndDeclaration: this.props.summary[7],
-    isValidated: this.props.summary[8],
-    errorMessage: '',
-    loading: false,
-    declarations: getDeclarationFromSummary(this.props.summary[3], this.props.summary[4], this.props.summary[5])
+      mayEdit: false,
+      errorMessage: 'Loading ...',
+      errorFormMessage: '',
+      loading: false,
+      client: "",
+      insurance: "",
+      declarations: [],
+      dateDeclaration: "",
+      dateEndDeclaration: ""
   };
+
 
   handleDeclrationCodeChange = (idx) => (evt) => {
     const newDeclarations = this.state.declarations.map((declaration, sidx) => {
@@ -69,7 +89,7 @@ class EditDeclaration extends Component {
   handleSubmit = async (evt) => {
     evt.preventDefault();
     console.log("Preparing parameters ...");
-    this.setState({loading: true, errorMessage: ''});
+    this.setState({loading: true, errorFormMessage: ''});
     var codes = [];
     var amounts = [];
     var prices = [];
@@ -79,10 +99,12 @@ class EditDeclaration extends Component {
       prices.push(toNumberString(parseFloat(element.price)).replace(".", "").replace(",", ""));
     });
     try {
+      const accounts = await web3.eth.getAccounts();
+      const declaration = new Declaration(this.props.address);
       console.log("Transaction time now ...");
-      await this.props.declaration.methods.editDeclaration(this.state.insurance, this.state.client, codes.join(";"), amounts.join(";"), prices.join(";"), this.state.dateDeclaration, this.state.dateEndDeclaration)
+      await declaration.methods.editDeclaration(this.state.insurance, this.state.client, codes.join(";"), amounts.join(";"), prices.join(";"), this.state.dateDeclaration, this.state.dateEndDeclaration)
         .send({
-          from: this.props.accounts[0]
+          from: accounts[0]
         });
         console.log("Transaction succeeded");
       Router.replaceRoute(`/declaraties/${this.props.address}`);
@@ -90,32 +112,28 @@ class EditDeclaration extends Component {
     catch (err) {
       console.log("Transaction failed ...");
       console.log(err);
-      this.setState({errorMessage: err.message});
+      this.setState({errorFormMessage: err.message});
     }
     console.log("Submit done.");
     this.setState({loading: false});
   }
 
   render(){
-    if (!this.state.isValidated) {
+    if (this.props.isValidated){
       return (
         <Layout>
-          <div  className="display">
-            <Container>
-              <Grid verticalAlign='middle'>
-                <Grid.Column floated='left'>
-                  <h1>Bewerken declaratie: <span style={{color: '#58585a'}}>{this.props.address}</span></h1>
-                </Grid.Column>
-              </Grid>
-            </Container>
-          </div>
+          <div className='display'><Container><h1>Details declaratie: <span style={{color: '#58585a'}}>{this.props.address}</span></h1></Container></div>
+          <Container><Message info icon='help' content='Deze declaratie kan niet meer worden bewerkt, aangezien deze intern gevalideerd is.'/></Container>
+        </Layout>
+      );
+    }
+    if (this.state.mayEdit){
+      return (
+        <Layout>
+          <div className='display'><Container><h1>Bewerken declaratie: <span style={{color: '#58585a'}}>{this.props.address}</span></h1></Container></div>
           <Container>
-            <Message info
-              icon='help'
-              content='In onderstaand formulier, kunt u als zorgverlener een declaratie aanpassen. Let op! Dit kan alleen wanneer de declaratie intern nog niet is gevalideerd. Om een nieuwe declaratie code toe te voegen, drukt op op de knop Code toevoegen. Wilt u deze of een andere code verwijderen dan drukt u op de knop Code verwijderen. Zijn de aanpassingen klaar dan kunt u op de knop verstuur klikken.'
-            />
-            <Form onSubmit={this.handleSubmit} loading={this.state.loading} error={!!this.state.errorMessage}>
-              <Message error header="Oops!" content={this.state.errorMessage} />
+            <Form onSubmit={this.handleSubmit} loading={this.state.loading} error={!!this.state.errorFormMessage}>
+              <Message error header="Oops!" content={this.state.errorFormMessage} />
               <Form.Field>
                 <label>Address van Verzekeraar:</label>
                 <Input
@@ -146,8 +164,6 @@ class EditDeclaration extends Component {
                   onChange={ event => this.setState( {dateEndDeclaration: event.target.value} ) }
                 />
               </Form.Field>
-
-
               {this.state.declarations.map((declaration, idx) => (
                 <Form.Group widths='equal'>
                   <Form.Field>
@@ -176,26 +192,12 @@ class EditDeclaration extends Component {
     else {
       return (
         <Layout>
-          <div  className="display">
-            <Container>
-              <Grid verticalAlign='middle'>
-                <Grid.Column floated='left'>
-                  <h1>Bewerken declaratie: <span style={{color: '#58585a'}}>{this.props.address}</span></h1>
-                </Grid.Column>
-              </Grid>
-            </Container>
-          </div>
-          <Container>
-            <Message negative
-              icon='warning sign'
-              header='Oops ...'
-              content='U probeert een declaratie te bewerken die intern is gevalideerd. Dit mag niet, foei.'
-            />
-          </Container>
+          <div className='display'><Container><h1>Details declaratie: <span style={{color: '#58585a'}}>{this.props.address}</span></h1></Container></div>
+          <Container><Message info icon='help' content={this.state.errorMessage}/></Container>
         </Layout>
       );
     }
-
   }
 }
+
 export default EditDeclaration;
