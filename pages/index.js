@@ -79,8 +79,8 @@ class DeclarationIndex extends Component{
           style: { overflowWrap: 'break-word', borderRight: this.getCardStyle(element.isValidated, element.isAccepted) }
         };
       });
-  
-      return <Card.Group class='cicero-card' items={items} />;
+
+      return <Card.Group className='cicero-card' items={items} />;
     }
     else {
       return (
@@ -95,7 +95,7 @@ class DeclarationIndex extends Component{
   render(){
     return(
       <Layout>
-        <div  class="display">
+        <div  className="display">
           <Container>
             <Grid verticalAlign='middle'>
               <Grid.Column floated='left' width={5}>

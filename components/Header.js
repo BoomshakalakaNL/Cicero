@@ -6,7 +6,7 @@ export default () => {
   const src = 'https://www.cicerozorggroep.nl/assets/img/logo.png';
 
   return (
-    <div class='header'>
+    <div className='header'>
      <Container>
        <Grid verticalAlign='middle'>
          <Grid.Column align='right'>

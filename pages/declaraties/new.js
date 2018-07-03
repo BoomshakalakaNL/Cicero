@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import { Button, Form, Input, Message, Container, Grid } from 'semantic-ui-react';
+import { Button, Form, Input, Message, Container, Grid, Select } from 'semantic-ui-react';
 import Layout from '../../components/Layout.js';
 import factory from '../../ethereum/factory';
 import web3 from '../../ethereum/web3';
 import { Router } from '../../routes';
+import { getProductCodesForSelectInput, getClientForSelectInput, getOtherInfoForSelectInput } from '../../scripts/main';
 
 class NewDeclaration extends Component {
   constructor() {
     super();
     this.state = {
+      codeOptions: getProductCodesForSelectInput(),
+      clientOptions: getClientForSelectInput(),
+      infoOptions: getOtherInfoForSelectInput(),
       insurance : '',
       client: '',
       dateDeclaration: '',
@@ -23,10 +27,10 @@ class NewDeclaration extends Component {
     };
   }
 
-  handleDeclrationCodeChange = (idx) => (evt) => {
+  handleDeclarationCodeChange = (idx, value) => {
     const newDeclarations = this.state.declarations.map((declaration, sidx) => {
       if (idx !== sidx) return declaration;
-      return { ...declaration, code: evt.target.value };
+      return { ...declaration, code: value };
     });
 
     this.setState({ declarations: newDeclarations });
@@ -87,7 +91,7 @@ class NewDeclaration extends Component {
     console.log(this.state.declarations);
     return (
       <Layout>
-        <div  class="display">
+        <div  className="display">
           <Container>
             <Grid verticalAlign='middle'>
               <Grid.Column floated='left'>
@@ -104,17 +108,11 @@ class NewDeclaration extends Component {
           <Form onSubmit={this.handleSubmit} loading={this.state.loading} error={!!this.state.errorMessage}>
             <Form.Field>
               <label>Address van Verzekeraar:</label>
-              <Input
-                value={ this.state.insurance}
-                onChange={ event => this.setState( {insurance: event.target.value} ) }
-              />
+              <Select fluid value={this.state.insurance} options={this.state.infoOptions}  onChange={(e, { value }) => this.setState( {insurance: value} ) }/>
             </Form.Field>
             <Form.Field>
               <label>Address van Cliënt:</label>
-              <Input
-                value={ this.state.client}
-                onChange={ event => this.setState( {client: event.target.value} ) }
-              />
+              <Select fluid value={this.state.client} options={this.state.clientOptions}  onChange={(e, { value }) => this.setState( {client: value} ) }/>
             </Form.Field>
             <Form.Field>
               <label>Declaratie datum:</label>
@@ -138,7 +136,7 @@ class NewDeclaration extends Component {
               <Form.Group widths='equal'>
                 <Form.Field>
                   <label>Code</label>
-                  <Input fluid placeholder='A5' value={declaration.code} onChange={this.handleDeclrationCodeChange(idx)}/>
+                  <Select fluid options={this.state.codeOptions}  onChange={(e, { value }) => this.handleDeclarationCodeChange(idx, value)}/>
                 </Form.Field>
                 <Form.Field>
                   <label>Aantal</label>

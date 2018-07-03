@@ -41,7 +41,7 @@ class ShowDeclaration extends Component{
           } else {
             this.setState({errorMessage: err.message});
           }
-        } 
+        }
     }
 
     state = {
@@ -61,7 +61,7 @@ class ShowDeclaration extends Component{
                   meta: element.amount+" x €"+element.price
                 };
               });
-            return <Card.Group itemsPerRow={6} class='cicero-card' items={items} />;
+            return <Card.Group itemsPerRow={6} className='cicero-card' items={items} />;
         }
         catch(err){
             return null;
@@ -77,7 +77,7 @@ class ShowDeclaration extends Component{
             await declaration.methods.accept().send({
                 from: accounts[0]
             });
-            Router.pushRoute(`/declaraties`);
+            Router.pushRoute(`/`);
         } catch (err) {
             this.setState({ errorFormMessage: err.message });
         }
@@ -93,13 +93,13 @@ class ShowDeclaration extends Component{
             await declaration.methods.validate().send({
                 from: accounts[0]
             });
-            Router.pushRoute(`/declaraties`);
+            Router.pushRoute(`/`);
         } catch (err) {
             this.setState({ errorMessage: err.message });
         }
         this.setState({ loading: false });
     };
-    
+
 
 
     extraInformation(){
@@ -124,7 +124,7 @@ class ShowDeclaration extends Component{
                                     <h1>€{this.state.data.grandTotal}</h1>
                                     <Form error={!!this.state.errorFormMessage} loading={this.state.loading}>
                                         {this.state.data.isValidated ? (this.state.data.isAccepted ? null : (<Button fluid primary onClick={this.accorderen}>Accorderen</Button>)) : (<Button fluid primary onClick={this.valideren}>Valideren</Button>)}
-                                        <Message error content={this.state.errorFormMessage} />                                        
+                                        <Message error content={this.state.errorFormMessage} />
                                     </Form>
                                 </Grid.Column>
                             </Grid.Row>
@@ -143,7 +143,7 @@ class ShowDeclaration extends Component{
     render(){
         return (
             <Layout>
-                <div class="display">
+                <div className="display">
                     <Container>
                     <Grid verticalAlign='middle'>
                         <Grid.Column floated='left' width={9}>
@@ -161,8 +161,8 @@ class ShowDeclaration extends Component{
                 </div>
                 <Container>
                     {(this.state.errorMessage == "") ? null : (<Message info icon='help'  content={this.state.errorMessage} />)}
-                    
-                    {this.renderCards()}   
+
+                    {this.renderCards()}
                 </Container>
                 {this.extraInformation()}
             </Layout>

@@ -38,11 +38,11 @@ import clientInfo from '../clientInformation.json';
 import productInfo from '../productInformation.json';
 import otherInfo from '../otherInformation.json';
 
-export function  getClientName (address){  
+export function  getClientName (address){
   let name;
-  
+
   clientInfo.map(function(clientName){
-    if (address.toString() == clientName.id){  
+    if (address.toString() == clientName.id){
       name = clientName.name;
       return;
     }
@@ -50,11 +50,11 @@ export function  getClientName (address){
   return name;
 }
 
-export function getProductName (code){  
+export function getProductName (code){
   let name;
-  
+
   productInfo.map(function(product){
-    if (code == product.id){  
+    if (code == product.id){
       name = product.name;
       return;
     }
@@ -62,14 +62,38 @@ export function getProductName (code){
   return name;
 }
 
-export function getOtherInformation (address){  
+export function getOtherInformation (address){
   let name;
-  
+
   otherInfo.map(function(info){
-    if (address == info.id){  
+    if (address == info.id){
       name = info.name;
       return;
     }
   })
   return name;
+}
+
+export function getProductCodesForSelectInput () {
+  let codes = [];
+  productInfo.map(function(product){
+    codes.push( { key: product.id, text: product.id, value: product.id } );
+  });
+  return codes;
+}
+
+export function getClientForSelectInput () {
+  let clients = [];
+  clientInfo.map(function(client){
+    clients.push( { key: client.id, text: client.name+" - "+client.id, value: client.id } );
+  });
+  return clients;
+}
+
+export function getOtherInfoForSelectInput () {
+  let information = [];
+  otherInfo.map(function(info){
+    information.push( { key: info.id, text: info.name+" - "+info.id, value: info.id } );
+  });
+  return information;
 }

@@ -1,3 +1,10 @@
-[{"id": "ZW4","name": "Puistje uitknijpen"}, 
-{"id": "ZW5", "name": "test2"}, 
-{"id": "A1", "name": "test3"}]
+[{"id": "ZW1","name": "Minimale thuiszorg"},
+  {"id": "ZW2", "name": "Thuiszorg"},
+  {"id": "ZW3", "name": "Intensieve thuiszorg"},
+  {"id": "ZW4","name": "Opname"},
+  {"id": "ZW5", "name": "Intensieve opname"},
+  {"id": "A1", "name": "Minimale benodigheden thuiszorg"},
+  {"id": "A2","name": "Benodigheden thuiszorg"},
+  {"id": "A3", "name": "Uitgebreide benodigheden thuiszorg"},
+  {"id": "A4", "name": "Benodigheden opname"},
+  {"id": "A5", "name": "Uitgebreide benodigheden opname"}]

@@ -100,7 +100,7 @@ class EditDeclaration extends Component {
     if (!this.state.isValidated) {
       return (
         <Layout>
-          <div  class="display">
+          <div  className="display">
             <Container>
               <Grid verticalAlign='middle'>
                 <Grid.Column floated='left'>
@@ -176,7 +176,7 @@ class EditDeclaration extends Component {
     else {
       return (
         <Layout>
-          <div  class="display">
+          <div  className="display">
             <Container>
               <Grid verticalAlign='middle'>
                 <Grid.Column floated='left'>

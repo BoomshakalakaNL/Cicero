@@ -5,7 +5,7 @@ import { Link } from '../routes';
 export default () => {
   return (
     <div>
-      <div class='footer' style={{marginTop: '20px'}}>
+      <div className='footer' style={{marginTop: '20px'}}>
        <Container>
          <Grid columns='equal'>
            <Grid.Row>
@@ -13,9 +13,9 @@ export default () => {
               <h3 style={{color: 'black'}}>Cicero Zorggroep</h3>
               <p>St. Brigidastraat 3<br/>6441 CR Brunssum<br/>Postbus 149, 6440 AC Brunssum<br/>T 045 563 74 00 (algemeen)<br/>E <a href="mailto:info@cicerozorggroep.nl">info@cicerozorggroep.nl</a></p>
               <a href="https://twitter.com/CiceroZorggroe1" target="_blank"><Icon circular style={{background:'white'}} color='black' name='twitter'/></a>
-              <a href="https://plus.google.com/108459827876734814530?hl=nl" target="_blank"><Icon circular style={{background:'white'}} color='black' name='google plus g'/></a>
+              <a href="https://plus.google.com/108459827876734814530?hl=nl" target="_blank"><Icon circular style={{background:'white'}} color='black' name='google plus'/></a>
               <a href="https://www.facebook.com/CiceroZorggroep/" target="_blank"><Icon circular style={{background:'white'}} color='black' name='facebook f'/></a>
-              <a href="https://www.linkedin.com/company/cicero-zorggroep/" target="_blank"><Icon circular style={{background:'white'}} color='black' name='linkedin in'/></a>
+              <a href="https://www.linkedin.com/company/cicero-zorggroep/" target="_blank"><Icon circular style={{background:'white'}} color='black' name='linkedin'/></a>
               <a href="https://www.instagram.com/explore/tags/cicerozorggroep/" target="_blank"><Icon circular style={{background:'white'}} color='black' name='instagram'/></a>
               <a href="https://www.youtube.com/channel/UCRmGTvTk2vo6Fgd4H4EWyKw" target="_blank"><Icon circular style={{background:'white'}} color='black' name='youtube play'/></a>
              </Grid.Column>
@@ -47,13 +47,13 @@ export default () => {
          </Grid>
        </Container>
       </div>
-      <div class='subfooter'>
+      <div className='subfooter'>
         <Container>
           <Grid verticalAlign='middle'>
             <Grid.Column floated='left' width={5}>
               <a href="https://ess.cicerozorggroep.nl/CuraWebESS/Home/login?ReturnUrl=%2Fcurawebess" target="blank" style={{color:'white'}}><Icon circular style={{background:'white'}} color='black' name='user'/> Mijn Cicero</a>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <a href="https://cicero.rooster.nl/" target="blank" style={{color:'white'}}><Icon circular style={{background:'white'}} color='black' name='calendar alternate outline'/> InPlanning</a>
+              <a href="https://cicero.rooster.nl/" target="blank" style={{color:'white'}}><Icon circular style={{background:'white'}} color='black' name='calendar outline'/> InPlanning</a>
             </Grid.Column>
             <Grid.Column floated='right' width={5} style={{textAlign: 'right'}}>Sitemap&nbsp;&nbsp;|&nbsp;&nbsp;Disclaimer&nbsp;&nbsp;|&nbsp;&nbsp;Privacy</Grid.Column>
           </Grid>

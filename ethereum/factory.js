@@ -4,7 +4,7 @@ import DeclarationFactory from './build/DeclarationFactory.json';
 
 const instance = new web3.eth.Contract(
   JSON.parse(DeclarationFactory.interface),
-  '0xBDCB9aD2B691e32719F314a460B84bD2240ad8E2'
+  '0xb94Fe8e7F62118ccCDb6a7dDd593A07C88458e69'
 );
 
 export default instance;
